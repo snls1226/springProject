@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.sprinframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+	
+	<!-- 
+		base-package : 스캔할 대상이 되는 패키지명
+		use-default-filters : 디폴트(@Component, @Controller, @Service, @Repository) 애노테이션을 스캔할지 여부
+	 -->
+	<context:component-scan base-package="com.cinema.web" use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<bean class="com.cinema.common.inceptor.CinemaHandlerInterceptor" id="cinemaInterceptor"></bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+	<!-- Controller 클래스 실행 시 AOP -->
+	<bean class="com.cinema.common.inceptor.CinemaControllerInterceptor" id="controllerInterceptor"></bean>
+	<aop:config>
+		<aop:pointcut expression="execution(public * com.cinema.web..controller.*Controller.*(..))" id="controllerPointcut"/>
+		<aop:advisor advice-ref="controllerInterceptor" pointcut-ref="controllerPointcut"/>
+	</aop:config>
+
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" id="viewResolver">
+		<property name="prefix" value="/WEB-INF/view/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+	
+</beans>

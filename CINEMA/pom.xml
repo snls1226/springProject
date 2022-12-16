@@ -6,7 +6,7 @@
 	<artifactId>CINEMA</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<properties>
-		<spring_ver>4.3.10.RELEASE</spring_ver>
+		<spring_ver>5.2.20.RELEASE</spring_ver>
 		<aspectj_ver>1.9.4</aspectj_ver>
 	</properties>
 	<packaging>war</packaging>
